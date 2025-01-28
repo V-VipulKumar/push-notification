@@ -3,21 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Push Notifications with Firebase</title>
+  <title>Push Notification Example</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <h1>Push Notification Example</h1>
   <button id="enable-notifications">Enable Notifications</button>
-  
-  <!-- Firebase SDK Scripts -->
-  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js"></script>
-  
-  <!-- Your Firebase Config File -->
-  <script src="firebase-config.js"></script>
-  <!-- Main JS File -->
-  <script src="index.js"></script>
+
+  <!-- Firebase SDK scripts -->
+  <script type="module">
+    // Import the necessary Firebase modules
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js";
+    import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js";
+
+    // Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyAfzXNxNS60WZeOKZaIPNIw50JWVVHj5EQ",
+      authDomain: "learnpushnotification-2ae9e.firebaseapp.com",
+      projectId: "learnpushnotification-2ae9e",
+      storageBucket: "learnpushnotification-2ae9e.firebasestorage.app",
+      messagingSenderId: "485718680305",
+      appId: "1:485718680305:web:40def85e269d8594b47f50",
+      measurementId: "G-X5T7CP3GDW"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const messaging = getMessaging(app);
+
+    // Request permission and get token
+    const enableNotificationsButton = document.getElementById("enable-notifications");
+
+    enableNotificationsButton.addEventListener("click", async () => {
+      try {
+        const token = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" });
+        console.log("FCM Token:", token);
+        // Here you can send the token to your server for further processing
+      } catch (error) {
+        console.error("Error getting token", error);
+      }
+    });
+  </script>
+
+  <!-- Main JS File with type="module" -->
+  <!-- No need for separate index.js, everything is now inside the above script tag -->
 </body>
 </html>
-
