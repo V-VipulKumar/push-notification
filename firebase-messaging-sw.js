@@ -1,22 +1,34 @@
+// Import the Firebase scripts in the service worker
 importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/11.2.0/firebase-messaging.js');
 
-// Initialize Firebase
-firebase.initializeApp({
-  messagingSenderId: 'YOUR_MESSAGING_SENDER_ID'
-});
+// Your Firebase config (same as in your main app)
+const firebaseConfig = {
+  apiKey: "AIzaSyAfzXNxNS60WZeOKZaIPNIw50JWVVHj5EQ",
+  authDomain: "learnpushnotification-2ae9e.firebaseapp.com",
+  projectId: "learnpushnotification-2ae9e",
+  storageBucket: "learnpushnotification-2ae9e.firebasestorage.app",
+  messagingSenderId: "485718680305",
+  appId: "1:485718680305:web:40def85e269d8594b47f50",
+  measurementId: "G-X5T7CP3GDW"
+};
 
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Retrieve an instance of Firebase Messaging
 const messaging = firebase.messaging();
 
 // Handle background messages
-messaging.onBackgroundMessage((payload) => {
-  console.log('Received background message ', payload);
-  const notificationTitle = 'Background Message Title';
+messaging.onBackgroundMessage(function(payload) {
+  console.log('[firebase-messaging-sw.js] Received background message ', payload);
+
+  // Customize notification here
+  const notificationTitle = payload.notification.title;
   const notificationOptions = {
-    body: 'Background message body.',
-    icon: '/firebase-logo.png'
+    body: payload.notification.body,
+    icon: payload.notification.icon
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
-
