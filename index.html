@@ -4,7 +4,22 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Push Notification Example</title>
-  <link rel="stylesheet" href="style.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin-top: 50px;
+    }
+    #enable-notifications {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+    }
+  </style>
 </head>
 <body>
   <h1>Push Notification Example</h1>
@@ -36,16 +51,26 @@
 
     enableNotificationsButton.addEventListener("click", async () => {
       try {
+        // Requesting FCM Token
         const token = await getToken(messaging, { vapidKey: "YOUR_VAPID_KEY" });
-        console.log("FCM Token:", token);
-        // Here you can send the token to your server for further processing
+
+        if (token) {
+          console.log("FCM Token:", token);
+          alert("Notification permission granted and FCM token received!");
+        } else {
+          console.log("No FCM token received.");
+        }
       } catch (error) {
         console.error("Error getting token", error);
+        alert("Error getting FCM token: " + error.message);
       }
     });
-  </script>
 
-  <!-- Main JS File with type="module" -->
-  <!-- No need for separate index.js, everything is now inside the above script tag -->
+    // Listen for incoming messages while the app is in the foreground
+    onMessage(messaging, (payload) => {
+      console.log("Message received. ", payload);
+      alert("Message received: " + payload.notification.title);
+    });
+  </script>
 </body>
 </html>
